@@ -32,7 +32,7 @@ public class SampleController {
 
         return service.getPerson(id)
                 .flatMap(httpPersonResponse -> {
-                    log.debug(HTTP_PERSON_RESPONSE,httpPersonResponse);
+                    log.info(HTTP_PERSON_RESPONSE,httpPersonResponse);
                     return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.OK));
                 })
                 //Error Catch Handling, hence equal to finally or catch
