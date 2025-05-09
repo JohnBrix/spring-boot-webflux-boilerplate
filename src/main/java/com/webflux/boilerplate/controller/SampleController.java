@@ -48,12 +48,14 @@ public class SampleController {
 
         if (result.equals(NOT_FOUND_EXCEPTION)){
 
+            //Build HttpPersonResponse 404
             HttpPersonResponse httpPersonResponse = build404Response();
             log.error(ERROR,httpPersonResponse);
 
             return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.NOT_FOUND));
         }
 
+        //Build HttpPersonResponse 500
         HttpPersonResponse httpPersonResponse = build500Response();
         log.error(ERROR,httpPersonResponse);
 
