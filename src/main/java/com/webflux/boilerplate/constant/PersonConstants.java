@@ -18,8 +18,12 @@ public class PersonConstants {
 
     public static final String NOT_FOUND = "NOT_FOUND";
     public static final String USER_NOT_EXIST = "USER_NOT_EXIST";
-
+    public static final String SUCCESS = "SUCCESS";
     public static final String INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR";
+
+    public static final String DOWNSTREAM_EXCEPTION = "DOWNSTREAM_EXCEPTION";
+    public static final String JSON_PROCESS_EXCEPTION = "JSON_PROCESS_EXCEPTION";
+
 
 
 

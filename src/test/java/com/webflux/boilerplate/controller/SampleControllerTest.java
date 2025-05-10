@@ -39,7 +39,7 @@ public class SampleControllerTest {
     }
 
     @Test
-    public void paymentInstructionSuccessTest() throws Exception {
+    public void successPersonTest() throws Exception {
         when(service.getPerson(123L)).thenReturn(Single.just(buildSuccessResponse()));
 
         webTestClient

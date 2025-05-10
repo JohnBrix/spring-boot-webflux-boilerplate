@@ -29,23 +29,21 @@ public class SampleController {
 
     @GetMapping("/{id}")
     public Single<ResponseEntity<HttpPersonResponse>> getPerson(@PathVariable Long id) {
-
         return service.getPerson(id)
                 .flatMap(httpPersonResponse -> {
                     log.info(HTTP_PERSON_RESPONSE,httpPersonResponse);
                     return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.OK));
                 })
-                //Error Catch Handling, hence equal to finally or catch
-                .onErrorResumeNext(errorResult ->{
-                    log.error(ERROR, errorResult);
-                    return validateError(errorResult);
-                });
+                .onErrorResumeNext(SampleController::validateError);  //Error Catch Handling, hence equal to finally or catch
 
     }
 
     private static Single<ResponseEntity<HttpPersonResponse>> validateError(Throwable errorResult) {
         String result = errorResult.getMessage();
 
+        log.error(ERROR,result);
+
+        //Person Id not found in Database
         if (result.equals(NOT_FOUND_EXCEPTION)){
 
             //Build HttpPersonResponse 404
@@ -55,10 +53,21 @@ public class SampleController {
             return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.NOT_FOUND));
         }
 
+        //API is 5xx from webclient
+        if (result.equals(DOWNSTREAM_EXCEPTION)){
+            return Single.just(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
+        }
+
+        //Object Mapper cannot be parse properly
+        if (result.equals(JSON_PROCESS_EXCEPTION)){
+            return Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
+        }
+
         //Build HttpPersonResponse 500
         HttpPersonResponse httpPersonResponse = build500Response();
         log.error(ERROR,httpPersonResponse);
 
+        //Default Handling for 5xx
         return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.INTERNAL_SERVER_ERROR));
     }
 

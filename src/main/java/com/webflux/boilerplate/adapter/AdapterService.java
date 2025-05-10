@@ -11,5 +11,5 @@ import io.reactivex.rxjava3.core.Single;
  */
 public interface AdapterService {
 
-    Single<HttpPersonResponse> callSomethingAPI(String request);
+    Single<HttpPersonResponse> callSomethingAPI(Long request);
 }

@@ -38,11 +38,11 @@ public class SampleImplService implements SampleService {
                     log.debug(PERSON, personResponse);
 
                     //Calling another API
-                    return callSomethingAPI("id");
+                    return callSomethingAPI(id);
                 });
     }
 
-    private Single<HttpPersonResponse> callSomethingAPI(String id) {
+    private Single<HttpPersonResponse> callSomethingAPI(Long id) {
         return adapterService.callSomethingAPI(id)
                 .flatMap(httpPersonResponse -> {
                     log.debug(HTTP_PERSON_RESPONSE, httpPersonResponse);
