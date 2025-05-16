@@ -13,7 +13,6 @@ public class MainApplication {
             SpringApplication.run(MainApplication.class, args);
         } catch (Exception e) {
             log.error(String.valueOf(e.getCause()));
-
         }
 
     }

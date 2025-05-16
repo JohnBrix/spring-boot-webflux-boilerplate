@@ -24,8 +24,8 @@ import static org.mockito.Mockito.when;
  * @version $Id: SampleControllerTest.java, v 0.1 2025-05-09 11:24 PM John Brix Pomoy Exp $$
  */
 @RunWith(SpringRunner.class)
-@WebFluxTest(SampleController.class)
-public class SampleControllerTest {
+@WebFluxTest(PersonController.class)
+public class PersonControllerTest {
 
     @Autowired
     private WebTestClient webTestClient;

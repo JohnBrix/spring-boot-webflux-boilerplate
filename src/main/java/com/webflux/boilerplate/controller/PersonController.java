@@ -21,7 +21,7 @@ import static com.webflux.boilerplate.constant.PersonConstants.*;
  */
 @Slf4j
 @RestController
-public class SampleController {
+public class PersonController {
 
     @Autowired
     private SampleService service;
@@ -34,41 +34,27 @@ public class SampleController {
                     log.info(HTTP_PERSON_RESPONSE,httpPersonResponse);
                     return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.OK));
                 })
-                .onErrorResumeNext(SampleController::validateError);  //Error Catch Handling, hence equal to finally or catch
+                .onErrorResumeNext(PersonController::validateError);  //Error Catch Handling, hence equal to finally or catch
 
     }
 
-    private static Single<ResponseEntity<HttpPersonResponse>> validateError(Throwable errorResult) {
-        String result = errorResult.getMessage();
+    private static Single<ResponseEntity<HttpPersonResponse>> validateError(Throwable throwable) {
+        String result = throwable.getMessage();
 
         log.error(ERROR,result);
 
-        //Person Id not found in Database
-        if (result.equals(NOT_FOUND_EXCEPTION)){
+        //Validate the results and return NOT_FOUND_EXCEPTION,DOWNSTREAM_EXCEPTION and JSON_PROCESS_EXCEPTION. or else INTERNAL_SERVER_ERROR
+        return switch (result) {
+            case String error when error.equals("NOT_FOUND_EXCEPTION") -> Single.just(new ResponseEntity<>(build404Response(), HttpStatus.NOT_FOUND));
+            case String error when error.equals("DOWNSTREAM_EXCEPTION") -> Single.just(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
+            case String error when error.equals("JSON_PROCESS_EXCEPTION") -> Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
+            default ->{
+                    HttpPersonResponse httpPersonResponse = build500Response();
+                    log.error(ERROR,httpPersonResponse);
 
-            //Build HttpPersonResponse 404
-            HttpPersonResponse httpPersonResponse = build404Response();
-            log.error(ERROR,httpPersonResponse);
-
-            return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.NOT_FOUND));
-        }
-
-        //API is 5xx from webclient
-        if (result.equals(DOWNSTREAM_EXCEPTION)){
-            return Single.just(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
-        }
-
-        //Object Mapper cannot be parse properly
-        if (result.equals(JSON_PROCESS_EXCEPTION)){
-            return Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
-        }
-
-        //Build HttpPersonResponse 500
-        HttpPersonResponse httpPersonResponse = build500Response();
-        log.error(ERROR,httpPersonResponse);
-
-        //Default Handling for 5xx
-        return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.INTERNAL_SERVER_ERROR));
+            yield Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.INTERNAL_SERVER_ERROR));
+            }
+        };
     }
 
     private static HttpPersonResponse build404Response() {

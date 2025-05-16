@@ -26,7 +26,7 @@ import static com.webflux.boilerplate.constant.PersonConstants.*;
  */
 @Slf4j
 @Component
-public class AdapterImplService implements AdapterService {
+public class AdapterServiceImpl implements AdapterService {
 
     @Autowired
     private WebClient webClient;
@@ -60,7 +60,7 @@ public class AdapterImplService implements AdapterService {
 
     private HttpPersonResponse validateResponseAndParsingJsonToDTO(ResponseEntity<String> result) {
         //Validate results from DownStream
-        if (null == result.getBody() || result.getBody().trim().isEmpty()) {
+        if (null == result.getBody()) {
             throw new IllegalArgumentException(DOWNSTREAM_EXCEPTION);
         }
         //Parsing JSON to DTO

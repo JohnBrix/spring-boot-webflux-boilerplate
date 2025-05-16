@@ -21,7 +21,7 @@ import static com.webflux.boilerplate.constant.PersonConstants.*;
  */
 @Slf4j
 @Service
-public class PersonImplService implements PersonService {
+public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonRepository personRepository;

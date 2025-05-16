@@ -20,7 +20,7 @@ import static com.webflux.boilerplate.constant.PersonConstants.PERSON;
  */
 @Slf4j
 @Service
-public class SampleImplService implements SampleService {
+public class CallSomethingServiceImpl implements SampleService {
 
     @Autowired
     private PersonService personService;
