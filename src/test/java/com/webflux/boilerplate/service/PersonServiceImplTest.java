@@ -2,7 +2,9 @@ package com.webflux.boilerplate.service;
 
 import com.webflux.boilerplate.repository.PersonRepository;
 import com.webflux.boilerplate.service.impl.PersonServiceImpl;
-import org.junit.Before;
+import org.aspectj.lang.annotation.Before;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -20,7 +22,7 @@ public class PersonServiceImplTest {
     @Mock
     private PersonRepository personRepository;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }

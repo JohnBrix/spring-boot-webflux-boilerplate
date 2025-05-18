@@ -4,16 +4,13 @@ import com.webflux.boilerplate.mapper.PersonResponseMapper;
 import com.webflux.boilerplate.model.HttpPersonResponse;
 import com.webflux.boilerplate.service.PersonService;
 import io.reactivex.rxjava3.core.Single;
-import org.junit.Before;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 import static org.mockito.Mockito.when;
@@ -24,7 +21,6 @@ import static org.mockito.Mockito.when;
  * @author <John Brix Pomoy>
  * @version $Id: SampleControllerTest.java, v 0.1 2025-05-09 11:24 PM John Brix Pomoy Exp $$
  */
-@RunWith(SpringRunner.class)
 @WebFluxTest(PersonController.class)
 public class PersonControllerTest {
 
@@ -37,10 +33,12 @@ public class PersonControllerTest {
     @MockitoBean
     private PersonResponseMapper personResponseMapper;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
+
+    public static final String GET_PERSON = "/api/person/123";
 
     @Test
     public void successPersonTest() throws Exception {
@@ -48,7 +46,7 @@ public class PersonControllerTest {
 
         webTestClient
                 .get()
-                .uri("/123")
+                .uri(GET_PERSON)
                 .accept(MediaType.valueOf(MediaType.ALL_VALUE))
                 .exchange()
                 .expectStatus()
