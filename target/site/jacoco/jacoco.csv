@@ -1,8 +1,0 @@
-GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.controller,SampleController,66,27,2,0,22,7,5,4,4,4
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.adapter.impl,AdapterImplService,70,0,0,0,19,0,5,0,5,0
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.constant,ApiEndpointConstant,3,0,0,0,1,0,1,0,1,0
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.service.impl,SampleImplService,37,0,0,0,10,0,6,0,6,0
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.service.impl,PersonImplService,69,0,0,0,19,0,8,0,8,0
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.entity,Person,31,0,0,0,13,0,9,0,9,0
-Boileplate-for-Reactive-Programming,com.webflux.boilerplate.config,WebClientConfig,41,0,0,0,11,0,3,0,3,0

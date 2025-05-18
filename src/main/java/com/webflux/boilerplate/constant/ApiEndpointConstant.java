@@ -10,4 +10,5 @@ public class ApiEndpointConstant {
 
     public static final String LOCAL_HOST = "sample.com/getDetails";
 
+    public static final String ADAPTER = "Adapter: {}";
 }

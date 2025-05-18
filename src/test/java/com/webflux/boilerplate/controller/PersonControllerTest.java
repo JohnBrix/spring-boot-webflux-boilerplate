@@ -1,7 +1,8 @@
 package com.webflux.boilerplate.controller;
 
+import com.webflux.boilerplate.mapper.PersonResponseMapper;
 import com.webflux.boilerplate.model.HttpPersonResponse;
-import com.webflux.boilerplate.service.SampleService;
+import com.webflux.boilerplate.service.PersonService;
 import io.reactivex.rxjava3.core.Single;
 import org.junit.Before;
 
@@ -31,7 +32,10 @@ public class PersonControllerTest {
     private WebTestClient webTestClient;
 
     @MockitoBean
-    private SampleService service;
+    private PersonService service;
+
+    @MockitoBean
+    private PersonResponseMapper personResponseMapper;
 
     @Before
     public void setUp() {
@@ -40,7 +44,7 @@ public class PersonControllerTest {
 
     @Test
     public void successPersonTest() throws Exception {
-        when(service.getPerson(123L)).thenReturn(Single.just(buildSuccessResponse()));
+        when(service.getPersonById(123L)).thenReturn(Single.just(buildSuccessResponse()));
 
         webTestClient
                 .get()

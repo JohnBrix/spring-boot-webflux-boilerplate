@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.webflux.boilerplate.controller.SampleControllerTest
--------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.098 sec - in com.webflux.boilerplate.controller.SampleControllerTest

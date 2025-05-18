@@ -7,6 +7,7 @@ import com.webflux.boilerplate.model.HttpPersonResponse;
 import io.reactivex.rxjava3.core.Single;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.adapter.rxjava.RxJava3Adapter;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
+import static com.webflux.boilerplate.constant.ApiEndpointConstant.ADAPTER;
 import static com.webflux.boilerplate.constant.ApiEndpointConstant.LOCAL_HOST;
 import static com.webflux.boilerplate.constant.PersonConstants.*;
 
@@ -39,10 +43,7 @@ public class AdapterServiceImpl implements AdapterService {
     public Single<HttpPersonResponse> callSomethingAPI(Long request) {
         log.info(HTTP_REQUEST, request);
 
-        //Calling Another API
-        Mono<HttpPersonResponse> response = callAnotherAPI(request);
-
-        return RxJava3Adapter.monoToSingle(response);
+        return RxJava3Adapter.monoToSingle(callAnotherAPI(request));
     }
 
     private Mono<HttpPersonResponse> callAnotherAPI(Long request) {
@@ -59,12 +60,10 @@ public class AdapterServiceImpl implements AdapterService {
     }
 
     private HttpPersonResponse validateResponseAndParsingJsonToDTO(ResponseEntity<String> result) {
-        //Validate results from DownStream
-        if (null == result.getBody()) {
-            throw new IllegalArgumentException(DOWNSTREAM_EXCEPTION);
-        }
-        //Parsing JSON to DTO
-        return parsingJsonToDto(result);
+        return Optional.ofNullable(result.getBody())
+                .map(body -> parsingJsonToDto(result))
+                .orElseThrow(() -> new IllegalArgumentException(DOWNSTREAM_EXCEPTION));
+
     }
 
     private HttpPersonResponse parsingJsonToDto(ResponseEntity<String> result) {
@@ -78,7 +77,7 @@ public class AdapterServiceImpl implements AdapterService {
             log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);
             return httpPersonResponse;
         } catch (JsonProcessingException e) {
-            log.info("adapter {}", e);
+            log.info(ADAPTER, e);
             throw new IllegalArgumentException(JSON_PROCESS_EXCEPTION); // Directly throw an exception
         }
     }
