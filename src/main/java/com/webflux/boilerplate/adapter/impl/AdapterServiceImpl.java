@@ -3,11 +3,11 @@ package com.webflux.boilerplate.adapter.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.webflux.boilerplate.adapter.AdapterService;
+import com.webflux.boilerplate.model.HttpPersonRequest;
 import com.webflux.boilerplate.model.HttpPersonResponse;
 import io.reactivex.rxjava3.core.Single;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,8 +17,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
-import static com.webflux.boilerplate.constant.ApiEndpointConstant.ADAPTER;
-import static com.webflux.boilerplate.constant.ApiEndpointConstant.LOCAL_HOST;
+import static com.webflux.boilerplate.constant.ApiEndpointConstant.*;
 import static com.webflux.boilerplate.constant.PersonConstants.*;
 
 
@@ -40,18 +39,20 @@ public class AdapterServiceImpl implements AdapterService {
 
 
     @Override
-    public Single<HttpPersonResponse> callSomethingAPI(Long request) {
+    public Single<HttpPersonResponse> getKYCApi(HttpPersonRequest request) {
         log.info(HTTP_REQUEST, request);
 
-        return RxJava3Adapter.monoToSingle(callAnotherAPI(request));
+        return RxJava3Adapter.monoToSingle(getWebClient(request));
     }
 
-    private Mono<HttpPersonResponse> callAnotherAPI(Long request) {
+    private Mono<HttpPersonResponse> getWebClient(HttpPersonRequest request) {
+
+        //Calling External API /kyc
         return webClient.post()
-                .uri(LOCAL_HOST)
+                .uri(WIRE_MOCK_BASE_ENDPOINT + KYC)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.ALL)
-                .body(Mono.just(request), Long.class)
+                .body(Mono.just(request), HttpPersonRequest.class)
                 .retrieve()
                 .onStatus(status -> status.value() == 503,
                         response -> Mono.error(new Exception(DOWNSTREAM_EXCEPTION)))
@@ -60,6 +61,8 @@ public class AdapterServiceImpl implements AdapterService {
     }
 
     private HttpPersonResponse validateResponseAndParsingJsonToDTO(ResponseEntity<String> result) {
+        log.info(RESULT_BODY,result.getBody());
+
         return Optional.ofNullable(result.getBody())
                 .map(body -> parsingJsonToDto(result))
                 .orElseThrow(() -> new IllegalArgumentException(DOWNSTREAM_EXCEPTION));
@@ -68,17 +71,14 @@ public class AdapterServiceImpl implements AdapterService {
 
     private HttpPersonResponse parsingJsonToDto(ResponseEntity<String> result) {
         try {
-            //MockData E.G downstream is success
-            //TODO
-            //HttpPersonResponse httpPersonResponse = build2xxResponse();
-
             //Object Mapping and ideal for reparsing the JSON to DTO.
-
             HttpPersonResponse httpPersonResponse = objectMapper.readValue(result.getBody(), HttpPersonResponse.class);
+
             log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);
             return httpPersonResponse;
         } catch (JsonProcessingException e) {
             log.info(ADAPTER, e);
+
             throw new IllegalArgumentException(JSON_PROCESS_EXCEPTION); // Directly throw an exception
         }
     }

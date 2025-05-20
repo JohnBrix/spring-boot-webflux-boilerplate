@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonResponseMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Boileplate-for-Reactive-Programming</a> &gt; <a href="index.source.html" class="el_package">com.webflux.boilerplate.mapper</a> &gt; <span class="el_source">PersonResponseMapper.java</span></div><h1>PersonResponseMapper.java</h1><pre class="source lang-java linenums">package com.webflux.boilerplate.mapper;
+
+import com.webflux.boilerplate.model.HttpPersonResponse;
+import org.springframework.stereotype.Component;
+
+import static com.webflux.boilerplate.constant.PersonConstants.*;
+import static com.webflux.boilerplate.constant.PersonConstants.INTERNAL_SERVER_ERROR;
+
+/**
+ * package com.webflux.boilerplate.mapper; /**
+ *
+ * @author &lt;John Brix Pomoy&gt;
+ * @version $Id: PersonMapperResponse.java, v 0.1 2025-05-18 9:13 PM John Brix Pomoy Exp $$
+ */
+@Component
+<span class="nc" id="L16">public class PersonResponseMapper {</span>
+
+    public HttpPersonResponse build201Response() {
+<span class="nc" id="L19">        return HttpPersonResponse.builder()</span>
+<span class="nc" id="L20">                .message(CREATED)</span>
+<span class="nc" id="L21">                .status(0)</span>
+<span class="nc" id="L22">                .description(CREATED)</span>
+<span class="nc" id="L23">                .isSuccess(true)</span>
+<span class="nc" id="L24">                .build();</span>
+    }
+
+    public HttpPersonResponse build404Response() {
+<span class="nc" id="L28">        return HttpPersonResponse.builder()</span>
+<span class="nc" id="L29">                .message(NOT_FOUND)</span>
+<span class="nc" id="L30">                .status(1)</span>
+<span class="nc" id="L31">                .description(USER_NOT_EXIST)</span>
+<span class="nc" id="L32">                .isSuccess(false)</span>
+<span class="nc" id="L33">                .build();</span>
+    }
+
+    public HttpPersonResponse build500Response() {
+<span class="nc" id="L37">        return HttpPersonResponse.builder()</span>
+<span class="nc" id="L38">                .message(INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L39">                .status(2)</span>
+<span class="nc" id="L40">                .description(INTERNAL_SERVER_ERROR)</span>
+<span class="nc" id="L41">                .isSuccess(false)</span>
+<span class="nc" id="L42">                .build();</span>
+    }
+
+    public HttpPersonResponse build2xxResponse() {
+<span class="nc" id="L46">        return HttpPersonResponse.builder()</span>
+<span class="nc" id="L47">                .message(SUCCESS)</span>
+<span class="nc" id="L48">                .status(0)</span>
+<span class="nc" id="L49">                .description(SUCCESS)</span>
+<span class="nc" id="L50">                .isSuccess(true)</span>
+<span class="nc" id="L51">                .build();</span>
+    }
+
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

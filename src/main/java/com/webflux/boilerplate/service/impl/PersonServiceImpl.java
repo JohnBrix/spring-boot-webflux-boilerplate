@@ -3,6 +3,7 @@ package com.webflux.boilerplate.service.impl;
 import com.webflux.boilerplate.adapter.AdapterService;
 import com.webflux.boilerplate.entity.Person;
 import com.webflux.boilerplate.mapper.DtoToPersonMapper;
+import com.webflux.boilerplate.mapper.PersonRequestMapper;
 import com.webflux.boilerplate.mapper.PersonResponseMapper;
 import com.webflux.boilerplate.model.HttpPersonRequest;
 import com.webflux.boilerplate.model.HttpPersonResponse;
@@ -39,10 +40,14 @@ public class PersonServiceImpl implements PersonService {
 
     @Autowired
     private PersonResponseMapper personResponseMapper;
+    @Autowired
+    private PersonRequestMapper personRequestMapper;
 
     @Override
     public Single<HttpPersonResponse> getPersonById(Long id) {
-
+        //Building http request to external API
+        HttpPersonRequest mappedPersonRequest = personRequestMapper.buildHttpRequest(id);
+        log.info(PERSON,mappedPersonRequest);
 
         //findByPersonId
         return findByPersonId(id)
@@ -50,7 +55,7 @@ public class PersonServiceImpl implements PersonService {
                     log.debug(PERSON, personResponse);
 
                     //Calling another API
-                    return callSomethingAPI(id);
+                    return callSomethingAPI(mappedPersonRequest);
                 });
     }
 
@@ -94,8 +99,8 @@ public class PersonServiceImpl implements PersonService {
                 });
     }
 
-    private Single<HttpPersonResponse> callSomethingAPI(Long id) {
-        return adapterService.callSomethingAPI(id)
+    private Single<HttpPersonResponse> callSomethingAPI(HttpPersonRequest httpPersonRequest) {
+        return adapterService.getKYCApi(httpPersonRequest)
                 .flatMap(httpPersonResponse -> {
                     log.debug(HTTP_PERSON_RESPONSE, httpPersonResponse);
 

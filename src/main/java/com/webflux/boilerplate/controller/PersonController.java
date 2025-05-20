@@ -81,12 +81,9 @@ public class PersonController {
 
         //Validate the results and return NOT_FOUND_EXCEPTION,DOWNSTREAM_EXCEPTION and JSON_PROCESS_EXCEPTION. or else INTERNAL_SERVER_ERROR
         return switch (result) {
-            case ("NOT_FOUND_EXCEPTION") ->
-                    Single.just(new ResponseEntity<>(personResponseMapper.build404Response(), HttpStatus.NOT_FOUND));
-            case ("DOWNSTREAM_EXCEPTION") ->
-                    Single.just(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
-            case ("JSON_PROCESS_EXCEPTION") ->
-                    Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
+            case ("NOT_FOUND_EXCEPTION") -> Single.just(new ResponseEntity<>(personResponseMapper.build404Response(), HttpStatus.NOT_FOUND));
+            case ("DOWNSTREAM_EXCEPTION") -> Single.just(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
+            case ("JSON_PROCESS_EXCEPTION") -> Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
             default -> {
                 HttpPersonResponse httpPersonResponse = personResponseMapper.build500Response();
                 log.error(ERROR, httpPersonResponse);
@@ -95,9 +92,4 @@ public class PersonController {
             }
         };
     }
-
-
-
-
-
 }

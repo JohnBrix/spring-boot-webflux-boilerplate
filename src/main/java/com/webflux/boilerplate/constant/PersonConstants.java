@@ -27,7 +27,7 @@ public class PersonConstants {
 
     public static final String MAPPED_PERSON = "MappedPerson: {}";
 
-
+    public static final String RESULT_BODY = "RESULT_BODY: {}";
 
 
     private PersonConstants() {

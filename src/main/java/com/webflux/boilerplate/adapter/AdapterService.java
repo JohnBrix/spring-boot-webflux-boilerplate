@@ -1,5 +1,6 @@
 package com.webflux.boilerplate.adapter;
 
+import com.webflux.boilerplate.model.HttpPersonRequest;
 import com.webflux.boilerplate.model.HttpPersonResponse;
 import io.reactivex.rxjava3.core.Single;
 
@@ -11,5 +12,5 @@ import io.reactivex.rxjava3.core.Single;
  */
 public interface AdapterService {
 
-    Single<HttpPersonResponse> callSomethingAPI(Long request);
+    Single<HttpPersonResponse> getKYCApi(HttpPersonRequest request);
 }

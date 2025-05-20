@@ -16,4 +16,5 @@ public class HttpPersonResponse {
     private Integer status;
     private String description;
     private Boolean isSuccess;
+    private Integer resultCode;
 }

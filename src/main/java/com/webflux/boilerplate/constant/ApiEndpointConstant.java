@@ -11,7 +11,7 @@ public class ApiEndpointConstant {
     private ApiEndpointConstant() {
     }
 
-    public static final String LOCAL_HOST = "sample.com/getDetails";
-
+    public static final String WIRE_MOCK_BASE_ENDPOINT = "https://mdz9g.wiremockapi.cloud";
+    public static final String KYC = "/kyc";
     public static final String ADAPTER = "Adapter: {}";
 }

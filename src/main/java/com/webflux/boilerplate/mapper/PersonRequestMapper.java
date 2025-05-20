@@ -16,4 +16,10 @@ public class PersonRequestMapper {
         httpPersonRequest.setUserId(id);
         return httpPersonRequest;
     }
+
+    public HttpPersonRequest buildHttpRequest(Long id){
+        return HttpPersonRequest.builder()
+                .userId(id)
+                .build();
+    }
 }

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PersonController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Boileplate-for-Reactive-Programming</a> &gt; <a href="index.source.html" class="el_package">com.webflux.boilerplate.controller</a> &gt; <span class="el_source">PersonController.java</span></div><h1>PersonController.java</h1><pre class="source lang-java linenums">package com.webflux.boilerplate.controller;
+
+import com.webflux.boilerplate.mapper.PersonRequestMapper;
+import com.webflux.boilerplate.mapper.PersonResponseMapper;
+import com.webflux.boilerplate.model.HttpPersonRequest;
+import com.webflux.boilerplate.model.HttpPersonResponse;
+import com.webflux.boilerplate.service.PersonService;
+import io.reactivex.rxjava3.core.Single;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import static com.webflux.boilerplate.constant.PersonConstants.*;
+
+/**
+ * package com.webflux.boilerplate.controller; /**
+ *
+ * @author &lt;John Brix Pomoy&gt;
+ * @version $Id: SampleController.java, v 0.1 2025-05-09 9:33 PM John Brix Pomoy Exp $$
+ */
+<span class="fc" id="L23">@Slf4j</span>
+@RestController
+@RequestMapping(&quot;/api/person&quot;)
+<span class="fc" id="L26">public class PersonController {</span>
+
+    @Autowired
+    private PersonService personService;
+
+    @Autowired
+    private PersonResponseMapper personResponseMapper;
+
+    @Autowired
+    private PersonRequestMapper personRequestMapper;
+
+
+    @GetMapping(&quot;/{id}&quot;)
+    public Single&lt;ResponseEntity&lt;HttpPersonResponse&gt;&gt; getPerson(@PathVariable Long id) {
+<span class="fc" id="L40">        log.info(HTTP_ID,id);</span>
+
+<span class="fc" id="L42">        return personService.getPersonById(id)</span>
+<span class="fc" id="L43">                .flatMap(httpPersonResponse -&gt; {</span>
+<span class="fc" id="L44">                    log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);</span>
+
+<span class="fc" id="L46">                    return Single.just(new ResponseEntity&lt;&gt;(httpPersonResponse, HttpStatus.OK));</span>
+                })
+<span class="fc" id="L48">                .onErrorResumeNext(this::validateError);  //Error Catch Handling, hence equal to finally or catch</span>
+    }
+
+    @PostMapping(&quot;/createPerson&quot;)
+    public Single&lt;ResponseEntity&lt;HttpPersonResponse&gt;&gt; createPerson(@RequestBody HttpPersonRequest request) {
+<span class="fc" id="L53">        log.info(HTTP_REQUEST,request);</span>
+
+<span class="fc" id="L55">        return personService.createPersonDetails(request)</span>
+<span class="fc" id="L56">                .flatMap(httpPersonResponse -&gt; {</span>
+<span class="fc" id="L57">                    log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);</span>
+
+<span class="fc" id="L59">                    return Single.just(new ResponseEntity&lt;&gt;(httpPersonResponse, HttpStatus.CREATED));</span>
+                })
+<span class="fc" id="L61">                .onErrorResumeNext(this::validateError);</span>
+    }
+
+    @PutMapping(&quot;/updatePerson/{id}&quot;)
+    public Single&lt;ResponseEntity&lt;HttpPersonResponse&gt;&gt; updatePerson(@PathVariable Long id, @RequestBody HttpPersonRequest request) {
+<span class="nc" id="L66">        log.info(HTTP_REQUEST,request);</span>
+
+<span class="nc" id="L68">        return personService.updatePersonDetails(personRequestMapper.buildHttpRequest(request,id))</span>
+<span class="nc" id="L69">                .flatMap(httpPersonResponse -&gt; {</span>
+<span class="nc" id="L70">                    log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);</span>
+
+<span class="nc" id="L72">                    return Single.just(new ResponseEntity&lt;&gt;(httpPersonResponse, HttpStatus.OK));</span>
+                })
+<span class="nc" id="L74">                .onErrorResumeNext(this::validateError);</span>
+    }
+
+    public Single&lt;ResponseEntity&lt;HttpPersonResponse&gt;&gt; validateError(Throwable throwable) {
+<span class="nc" id="L78">        String result = throwable.getMessage();</span>
+
+<span class="nc" id="L80">        log.error(ERROR, result);</span>
+
+        //Validate the results and return NOT_FOUND_EXCEPTION,DOWNSTREAM_EXCEPTION and JSON_PROCESS_EXCEPTION. or else INTERNAL_SERVER_ERROR
+<span class="nc bnc" id="L83" title="All 4 branches missed.">        return switch (result) {</span>
+<span class="nc" id="L84">            case (&quot;NOT_FOUND_EXCEPTION&quot;) -&gt; Single.just(new ResponseEntity&lt;&gt;(personResponseMapper.build404Response(), HttpStatus.NOT_FOUND));</span>
+<span class="nc" id="L85">            case (&quot;DOWNSTREAM_EXCEPTION&quot;) -&gt; Single.just(new ResponseEntity&lt;&gt;(HttpStatus.UNAUTHORIZED));</span>
+<span class="nc" id="L86">            case (&quot;JSON_PROCESS_EXCEPTION&quot;) -&gt; Single.just(new ResponseEntity&lt;&gt;(HttpStatus.UNPROCESSABLE_ENTITY));</span>
+            default -&gt; {
+<span class="nc" id="L88">                HttpPersonResponse httpPersonResponse = personResponseMapper.build500Response();</span>
+<span class="nc" id="L89">                log.error(ERROR, httpPersonResponse);</span>
+
+<span class="nc" id="L91">                yield Single.just(new ResponseEntity&lt;&gt;(httpPersonResponse, HttpStatus.INTERNAL_SERVER_ERROR));</span>
+            }
+        };
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
