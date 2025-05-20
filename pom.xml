@@ -230,8 +230,7 @@
                             <!-- Threshold -->
 
                             <!--
-                            for JUNIT 4 use this: mvn clean install -Pcodecoverage
-                            for JUNIT 5 use this: mvn clean verify site
+                            for JUNIT5 use this: mvn clean install -Pcodecoverage
                             -->
                             <execution>
                                 <id>coverage-check</id>
