@@ -25,6 +25,16 @@ public class Person {
     @Column/*(name = "middle_name")*/
     private String middleName;
 
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                '}';
+    }
+
     public Long getId() {
         return id;
     }

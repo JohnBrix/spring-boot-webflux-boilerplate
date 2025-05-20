@@ -8,6 +8,9 @@ package com.webflux.boilerplate.constant;
  */
 public class ApiEndpointConstant {
 
+    private ApiEndpointConstant() {
+    }
+
     public static final String LOCAL_HOST = "sample.com/getDetails";
 
     public static final String ADAPTER = "Adapter: {}";

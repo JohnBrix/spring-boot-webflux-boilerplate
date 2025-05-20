@@ -3,6 +3,7 @@ com/webflux/boilerplate/controller/PersonController.class
 com/webflux/boilerplate/adapter/impl/AdapterServiceImpl.class
 com/webflux/boilerplate/MainApplication.class
 com/webflux/boilerplate/service/PersonService.class
+com/webflux/boilerplate/mapper/PersonRequestMapper.class
 com/webflux/boilerplate/service/impl/PersonServiceImpl.class
 com/webflux/boilerplate/mapper/DtoToPersonMapper.class
 com/webflux/boilerplate/model/HttpPersonResponse.class

@@ -1,5 +1,6 @@
 package com.webflux.boilerplate.controller;
 
+import com.webflux.boilerplate.mapper.PersonRequestMapper;
 import com.webflux.boilerplate.mapper.PersonResponseMapper;
 import com.webflux.boilerplate.model.HttpPersonRequest;
 import com.webflux.boilerplate.model.HttpPersonResponse;
@@ -30,6 +31,9 @@ public class PersonController {
     @Autowired
     private PersonResponseMapper personResponseMapper;
 
+    @Autowired
+    private PersonRequestMapper personRequestMapper;
+
 
     @GetMapping("/{id}")
     public Single<ResponseEntity<HttpPersonResponse>> getPerson(@PathVariable Long id) {
@@ -53,6 +57,19 @@ public class PersonController {
                     log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);
 
                     return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.CREATED));
+                })
+                .onErrorResumeNext(this::validateError);
+    }
+
+    @PutMapping("/updatePerson/{id}")
+    public Single<ResponseEntity<HttpPersonResponse>> updatePerson(@PathVariable Long id, @RequestBody HttpPersonRequest request) {
+        log.info(HTTP_REQUEST,request);
+
+        return personService.updatePersonDetails(personRequestMapper.buildHttpRequest(request,id))
+                .flatMap(httpPersonResponse -> {
+                    log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);
+
+                    return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.OK));
                 })
                 .onErrorResumeNext(this::validateError);
     }

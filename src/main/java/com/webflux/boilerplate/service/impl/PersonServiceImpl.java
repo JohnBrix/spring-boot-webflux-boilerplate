@@ -56,11 +56,41 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Single<HttpPersonResponse> createPersonDetails(HttpPersonRequest personRequest){
-        return saveOrUpdatePerson(personRequest)
+        //Dto to Person mapping for Insert query only.
+        Person mappedPerson = dtoToPersonMapper.saveDtoToPerson(personRequest);
+        log.info(MAPPED_PERSON,mappedPerson.toString());
+
+        //CreatePerson Details
+        return saveOrUpdatePerson(mappedPerson)
                 .flatMap(personResponse ->{
                     log.info(PERSON,personResponse);
 
+                    //Return 201
                     return Single.just(personResponseMapper.build201Response());
+                });
+    }
+
+    @Override
+    public Single<HttpPersonResponse> updatePersonDetails(HttpPersonRequest personRequest){
+        //Dto to Person mapping for Update query only.
+        Person mappedPerson = dtoToPersonMapper.updateDtoToPerson(personRequest);
+        log.info(MAPPED_PERSON,mappedPerson.toString());
+
+        //Find Person By Id and Before Update Person details.
+        return findPersonByIdBeforeUpdate(mappedPerson);
+    }
+
+    private Single<HttpPersonResponse> findPersonByIdBeforeUpdate(Person mappedPerson) {
+        return findByPersonId(mappedPerson.getId())
+                .flatMap(personResponse -> {
+                    log.info(PERSON, personResponse);
+
+                    return saveOrUpdatePerson(mappedPerson)
+                            .flatMap(person -> {
+                                log.info(PERSON, person);
+
+                                return Single.just(personResponseMapper.build2xxResponse());
+                            });
                 });
     }
 
@@ -85,9 +115,7 @@ public class PersonServiceImpl implements PersonService {
         );
     }
 
-    private Single<Person> saveOrUpdatePerson(HttpPersonRequest person) {
-        Person mappedPerson = dtoToPersonMapper.dtoToPerson(person);
-        log.info(MAPPED_PERSON,mappedPerson);
+    private Single<Person> saveOrUpdatePerson(Person mappedPerson) {
 
         return RxJava3Adapter.monoToSingle(
                 personRepository.save(mappedPerson)

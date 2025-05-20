@@ -14,4 +14,5 @@ public interface PersonService {
 
     Single<HttpPersonResponse> getPersonById(Long id);
     Single<HttpPersonResponse> createPersonDetails(HttpPersonRequest personRequest);
+    Single<HttpPersonResponse> updatePersonDetails(HttpPersonRequest personRequest);
 }

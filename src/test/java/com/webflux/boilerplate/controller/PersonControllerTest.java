@@ -1,5 +1,6 @@
 package com.webflux.boilerplate.controller;
 
+import com.webflux.boilerplate.mapper.PersonRequestMapper;
 import com.webflux.boilerplate.mapper.PersonResponseMapper;
 import com.webflux.boilerplate.model.HttpPersonResponse;
 import com.webflux.boilerplate.service.PersonService;
@@ -32,6 +33,9 @@ public class PersonControllerTest {
 
     @MockitoBean
     private PersonResponseMapper personResponseMapper;
+
+    @MockitoBean
+    private PersonRequestMapper personRequestMapper;
 
     @BeforeEach
     public void setUp() {

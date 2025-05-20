@@ -42,6 +42,15 @@ public class PersonResponseMapper {
                 .build();
     }
 
+    public HttpPersonResponse build2xxResponse() {
+        return HttpPersonResponse.builder()
+                .message(SUCCESS)
+                .status(0)
+                .description(SUCCESS)
+                .isSuccess(true)
+                .build();
+    }
+
 
 
 }

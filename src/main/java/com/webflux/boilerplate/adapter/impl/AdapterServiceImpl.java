@@ -69,6 +69,7 @@ public class AdapterServiceImpl implements AdapterService {
     private HttpPersonResponse parsingJsonToDto(ResponseEntity<String> result) {
         try {
             //MockData E.G downstream is success
+            //TODO
             //HttpPersonResponse httpPersonResponse = build2xxResponse();
 
             //Object Mapping and ideal for reparsing the JSON to DTO.
@@ -82,14 +83,7 @@ public class AdapterServiceImpl implements AdapterService {
         }
     }
 
-    private static HttpPersonResponse build2xxResponse() {
-        return HttpPersonResponse.builder()
-                .message(SUCCESS)
-                .status(0)
-                .description(SUCCESS)
-                .isSuccess(true)
-                .build();
-    }
+
 
 
 }

@@ -14,7 +14,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DtoToPersonMapper {
 
+    Person saveDtoToPerson(HttpPersonRequest httpPersonRequest);
+
+    //Notes: you will add the userId from http request to entity person.id if that is necessary.
     @Mapping(source = "userId", target = "id")
-    Person dtoToPerson(HttpPersonRequest httpPersonRequest);
+    Person updateDtoToPerson(HttpPersonRequest httpPersonRequest);
 
 }

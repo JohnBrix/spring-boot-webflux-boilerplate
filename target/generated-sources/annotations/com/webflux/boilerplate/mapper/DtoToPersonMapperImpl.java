@@ -7,14 +7,29 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2025-05-18T23:30:29+0800",
+    date = "2025-05-20T22:20:44+0800",
     comments = "version: 1.5.5.Final, compiler: javac, environment: Java 21.0.7 (Oracle Corporation)"
 )
 @Component
 public class DtoToPersonMapperImpl implements DtoToPersonMapper {
 
     @Override
-    public Person dtoToPerson(HttpPersonRequest httpPersonRequest) {
+    public Person saveDtoToPerson(HttpPersonRequest httpPersonRequest) {
+        if ( httpPersonRequest == null ) {
+            return null;
+        }
+
+        Person person = new Person();
+
+        person.setFirstName( httpPersonRequest.getFirstName() );
+        person.setLastName( httpPersonRequest.getLastName() );
+        person.setMiddleName( httpPersonRequest.getMiddleName() );
+
+        return person;
+    }
+
+    @Override
+    public Person updateDtoToPerson(HttpPersonRequest httpPersonRequest) {
         if ( httpPersonRequest == null ) {
             return null;
         }
