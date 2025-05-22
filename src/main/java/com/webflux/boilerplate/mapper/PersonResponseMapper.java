@@ -51,6 +51,16 @@ public class PersonResponseMapper {
                 .build();
     }
 
+    public HttpPersonResponse buildXmlResponse(String xml){
+        return HttpPersonResponse.builder()
+                .message(INTERNAL_SERVER_ERROR)
+                .status(0)
+                .description(INTERNAL_SERVER_ERROR)
+                .isSuccess(false)
+                .xml(xml)
+                .build();
+    }
+
 
 
 }

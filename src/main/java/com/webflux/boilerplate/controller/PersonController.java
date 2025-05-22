@@ -37,7 +37,7 @@ public class PersonController {
 
     @GetMapping("/{id}")
     public Single<ResponseEntity<HttpPersonResponse>> getPerson(@PathVariable Long id) {
-        log.info(HTTP_ID,id);
+        log.info(HTTP_ID, id);
 
         return personService.getPersonById(id)
                 .flatMap(httpPersonResponse -> {
@@ -50,7 +50,7 @@ public class PersonController {
 
     @PostMapping("/createPerson")
     public Single<ResponseEntity<HttpPersonResponse>> createPerson(@RequestBody HttpPersonRequest request) {
-        log.info(HTTP_REQUEST,request);
+        log.info(HTTP_REQUEST, request);
 
         return personService.createPersonDetails(request)
                 .flatMap(httpPersonResponse -> {
@@ -63,15 +63,27 @@ public class PersonController {
 
     @PutMapping("/updatePerson/{id}")
     public Single<ResponseEntity<HttpPersonResponse>> updatePerson(@PathVariable Long id, @RequestBody HttpPersonRequest request) {
-        log.info(HTTP_REQUEST,request);
 
-        return personService.updatePersonDetails(personRequestMapper.buildHttpRequest(request,id))
-                .flatMap(httpPersonResponse -> {
-                    log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);
+        return validateRequest(request)
+                .flatMap(httpPersonRequest -> {
+                    log.info(HTTP_REQUEST, httpPersonRequest);
 
-                    return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.OK));
-                })
-                .onErrorResumeNext(this::validateError);
+                    return personService.updatePersonDetails(personRequestMapper.buildHttpRequest(request, id))
+                            .flatMap(httpPersonResponse -> {
+                                log.info(HTTP_PERSON_RESPONSE, httpPersonResponse);
+                                log.info("FLATMAP_SUCCESS");
+                                return Single.just(new ResponseEntity<>(httpPersonResponse, HttpStatus.OK));
+                            });
+                }).onErrorResumeNext(this::validateError);
+    }
+
+    public Single<HttpPersonRequest> validateRequest(HttpPersonRequest httpPersonRequest) {
+
+        log.error("HttpPersonRequest: {}", httpPersonRequest);
+        return switch (httpPersonRequest) {
+            case HttpPersonRequest request when request.getFirstName().equals("brix") -> Single.error(new IllegalArgumentException("BRIX_ILLEGAL"));
+            default -> Single.just(httpPersonRequest);
+        };
     }
 
     public Single<ResponseEntity<HttpPersonResponse>> validateError(Throwable throwable) {
@@ -81,7 +93,10 @@ public class PersonController {
 
         //Validate the results and return NOT_FOUND_EXCEPTION,DOWNSTREAM_EXCEPTION and JSON_PROCESS_EXCEPTION. or else INTERNAL_SERVER_ERROR
         return switch (result) {
-            case ("NOT_FOUND_EXCEPTION") -> Single.just(new ResponseEntity<>(personResponseMapper.build404Response(), HttpStatus.NOT_FOUND));
+            case ("BRIX_ILLEGAL") -> Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
+            case ("FTUBE_10") -> Single.just(new ResponseEntity<>(HttpStatus.ALREADY_REPORTED));
+            case ("NOT_FOUND_EXCEPTION") ->
+                    Single.just(new ResponseEntity<>(personResponseMapper.build404Response(), HttpStatus.NOT_FOUND));
             case ("DOWNSTREAM_EXCEPTION") -> Single.just(new ResponseEntity<>(HttpStatus.UNAUTHORIZED));
             case ("JSON_PROCESS_EXCEPTION") -> Single.just(new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY));
             default -> {

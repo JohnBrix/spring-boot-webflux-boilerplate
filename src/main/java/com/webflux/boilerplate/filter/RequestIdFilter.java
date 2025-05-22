@@ -1,5 +1,6 @@
 package com.webflux.boilerplate.filter;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -14,6 +15,7 @@ import java.util.UUID;
  * @author <John Brix Pomoy>
  * @version $Id: RequestIdFilter.java, v 0.1 2025-05-18 10:37 PM John Brix Pomoy Exp $$
  */
+@Slf4j
 @Component
 public class RequestIdFilter implements WebFilter {
 
