@@ -1,5 +1,6 @@
 package com.webflux.boilerplate.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import lombok.Data;
  */
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class HttpPersonResponse {
     private String message;
     private Integer status;
