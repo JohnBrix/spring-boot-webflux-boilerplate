@@ -81,7 +81,7 @@ public class PersonController {
 
         log.error("HttpPersonRequest: {}", httpPersonRequest);
         return switch (httpPersonRequest) {
-            case HttpPersonRequest request when request.getFirstName().equals("brix") -> Single.error(new IllegalArgumentException("BRIX_ILLEGAL"));
+            case HttpPersonRequest request when request.getFirstName().equals("SOMETHING_HERE") -> Single.error(new IllegalArgumentException("BAD_REQUEST"));
             default -> Single.just(httpPersonRequest);
         };
     }
